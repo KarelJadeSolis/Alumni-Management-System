@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni Management System - Directory</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1250px;
+            background: white;
+            padding: 30px 40px;
+            border-radius: 20px;
+            border: 2px solid #2B35AF;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active-view {
+            display: block;
+        }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        h2 {
+            color: black;
+            text-align: center;
+            margin: 0 0 25px 0;
+            font-size: 24px;
+        }
+
+        .header-flex h2 {
+            text-align: left;
+            margin-bottom: 0;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-group input, .filter-group select {
+            width: 100%;
+            padding: 10px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+            box-sizing: border-box;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .alumni-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .alumni-table th, .alumni-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .alumni-table th {
+            background-color: #f4f6f9;
+            color: #2B35AF;
+            font-weight: bold;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: capitalize;
+        }
+        .status-badge.active {
+            background-color: #e6f4ea;
+            color: #137333;
+        }
+        .status-badge.inactive {
+            background-color: #fce8e6;
+            color: #c5221f;
+        }
+        .status-badge.deceased {
+            background-color: #f1f3f4;
+            color: #5f6368;
+        }
+        .status-badge.unverified {
+            background-color: #fef7e0;
+            color: #b06000;
+        }
+
+        #alumniForm {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px 20px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: bold;
+            color: black;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px 10px; 
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #2B35AF;
+            outline: none;
+        }
+
+        button {
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background-color: navy;
+            color: white;
+            padding: 10px 16px;
+            font-size: 14px;
+        }
+
+        .btn-primary:hover {
+            background-color: #2B35AF;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 16px;
+            font-size: 14px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .submit-btn {
+            grid-column: span 2;
+            width: 100%;
+            padding: 12px;
+            background-color: navy;
+            color: white;
+            font-size: 15px;
+            margin-top: 10px;
+            letter-spacing: 2px;
+        }
+
+        .submit-btn:hover {
+            background-color: #2B35AF;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            margin-right: 4px;
+            padding: 4px;
+            letter-spacing: normal;
+        }
+        .btn-icon:hover {
+            background-color: #eef2f7;
+            border-radius: 4px;
+        }
+
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .confirm-content {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 300px;
+        }
+
+        .confirm-actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .btn-yes {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background-color: #ccc;
+            color: #333;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div id="listView" class="view-section active-view">
+            <div class="header-flex">
+                <h2>Alumni Directory</h2>
+                <div class="header-actions">
+                    <button type="button" id="showAddFormBtn" class="btn-primary">Register New Alumnus</button>
+                    <button type="button" id="logoutBtn" class="btn-secondary">Log Out</button>
+                </div>
+            </div>
+
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <input type="text" id="searchKeyword" placeholder="Search name/ID...">
+                </div>
+                <div class="filter-group">
+                    <select id="filterProgram">
+                        <option value="">Program</option>
+                        <option value="BS Information Technology">BS Information Technology</option>
+                        <option value="BS Computer Science">BS Computer Science</option>
+                        <option value="BS Library and Information Science">BS Library and Information Science</option>
+                        <option value="BS Mathematics">BS Mathematics</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <select id="filterBatch">
+                        <option value="">Graduation Year</option>
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <input type="text" id="filterLocation" placeholder="Location...">
+                </div>
+                <div class="filter-group">
+                    <select id="filterStatus">
+                        <option value="">Status</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                        <option value="Deceased">Deceased</option>
+                        <option value="Unverified">Unverified</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="alumni-table">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Program</th>
+                            <th>Batch</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alumniTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="formView" class="view-section">
+            <div class="header-flex">
+                <h2 id="formTitle">Alumni Registration</h2>
+                <button type="button" id="backToListBtn" class="btn-secondary">Back to List</button>
+            </div>
+
+            <form id="alumniForm">
+                <div class="form-group">
+                    <label for="student_id">Student ID:</label>
+                    <input type="text" id="student_id" name="student_id" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="date_of_birth">Date of Birth:</label>
+                    <input type="date" id="date_of_birth" name="date_of_birth">
+                </div>
+               
+                <div class="form-group">
+                    <label for="first_name">First Name:</label>
+                    <input type="text" id="first_name" name="first_name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="middle_name">Middle Name:</label>
+                    <input type="text" id="middle_name" name="middle_name">
+                </div>
+
+                <div class="form-group">
+                    <label for="contact_number">Contact Number:</label>
+                    <input type="text" id="contact_number" name="contact_number" maxlength="11">
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">Last Name:</label>
+                    <input type="text" id="last_name" name="last_name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="batch_year">Batch / Graduation Year:</label>
+                    <select id="batch_year" name="batch_year" required>
+                        <option value="">Select Year</option>
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <input type="text" id="gender" name="gender">
+                </div>
+
+                <div class="form-group">
+                    <label for="program_id">Degree Program:</label>
+                    <select id="program_id" name="program_id" required>
+                        <option value="">Select Program</option>
+                        <option value="1">BS Information Technology</option>
+                        <option value="2">BS Computer Science</option>
+                        <option value="3">BS Library and Information Science</option>
+                        <option value="4">BS Mathematics</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="address">Address / Location:</label>
+                    <textarea id="address" name="address" rows="1" placeholder="House/Unit/Street, Barangay, Municipality/City, Province" required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Register Alumnus</button>
+            </form>
+        </div>
+
+    </div>
+
+    <div id="deleteConfirmModal" class="confirm-modal" style="display: none;">
+        <div class="confirm-content">
+            <p>Are you sure you want to delete this record?</p>
+            <div class="confirm-actions">
+                <button id="confirmYesBtn" class="btn-yes">Yes</button>
+                <button id="confirmCancelBtn" class="btn-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+   <script>
+    // Session Guard
+    window.addEventListener('DOMContentLoaded', () => {
+        const loggedInUser = sessionStorage.getItem('username');
+        const userRole = sessionStorage.getItem('role');
+
+        if (!loggedInUser || !userRole) {
+            alert('Unauthorized access! Please log in first.');
+            window.location.href = '/login.html';
+        }
+    });
+
+    let globalAlumniList = [];
+
+    function switchView(viewId) {
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
+        document.getElementById(viewId).classList.add('active-view');
+    }
+
+    function setFormEditable(isEditable) {
+        const inputs = document.querySelectorAll('#alumniForm input, #alumniForm select, #alumniForm textarea');
+        inputs.forEach(input => {
+            if (input.id === 'student_id') {
+                input.disabled = !isEditable && document.getElementById('formTitle').textContent.includes("Edit");
+            } else {
+                input.disabled = !isEditable;
+            }
+        });
+
+        const submitBtn = document.querySelector('.submit-btn');
+        if (submitBtn) {
+            submitBtn.style.display = isEditable ? 'inline-block' : 'none';
+        }
+    }
+
+    document.getElementById('showAddFormBtn').addEventListener('click', () => {
+        document.getElementById('alumniForm').reset();
+        document.getElementById('formTitle').textContent = "Alumni Registration";
+        document.querySelector('.submit-btn').textContent = "Register Alumnus";
+        setFormEditable(true);
+        switchView('formView');
+    });
+
+    document.getElementById('backToListBtn').addEventListener('click', () => {
+        switchView('listView');
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        sessionStorage.clear();
+        window.location.href = '/login.html';
+    });
+
+    function applyFilters() {
+        const keyword = document.getElementById('searchKeyword').value.toLowerCase().trim();
+        const programFilter = document.getElementById('filterProgram').value;
+        const batchFilter = document.getElementById('filterBatch').value;
+        const locationFilter = document.getElementById('filterLocation').value.toLowerCase().trim();
+        const statusFilter = document.getElementById('filterStatus').value;
+
+        const tbody = document.getElementById('alumniTableBody');
+        tbody.innerHTML = '';
+
+        const filteredList = globalAlumniList.filter(alumnus => {
+            const studentId = (alumnus.student_id || '').toLowerCase();
+            const fullName = `${alumnus.first_name || ''} ${alumnus.last_name || ''}`.toLowerCase();
+            const programName = (alumnus.program_name || alumnus.program_id || '').toString();
+            const batchYear = (alumnus.batch_year || '').toString();
+            const address = (alumnus.address || '').toLowerCase();
+            const status = (alumnus.current_status || 'Active');
+
+            const matchesKeyword = !keyword || studentId.includes(keyword) || fullName.includes(keyword);
+            const matchesProgram = !programFilter || programName === programFilter;
+            const matchesBatch = !batchFilter || batchYear === batchFilter;
+            const matchesLocation = !locationFilter || address.includes(locationFilter);
+            const matchesStatus = !statusFilter || status.toLowerCase() === statusFilter.toLowerCase();
+
+            return matchesKeyword && matchesProgram && matchesBatch && matchesLocation && matchesStatus;
+        });
+
+        if (filteredList.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align: center;">No matching alumni records found.</td></tr>`;
+            return;
+        }
+
+        filteredList.forEach(alumnus => {
+            const row = document.createElement('tr');
+            const status = alumnus.current_status || 'Active';
+            const statusClass = status.toLowerCase();
+            
+            row.innerHTML = `
+                <td>${alumnus.student_id}</td>
+                <td>${alumnus.first_name} ${alumnus.last_name}</td>
+                <td>${alumnus.program_name || alumnus.program_id}</td>
+                <td>${alumnus.batch_year}</td>
+                <td>${alumnus.address || ''}</td>
+                <td><span class="status-badge ${statusClass}" id="status-${alumnus.student_id}" onclick="cycleStatus('${alumnus.student_id}')">${status}</span></td>
+                <td>
+                    <button class="btn-icon" title="View" onclick='viewAlumnusRecord(${JSON.stringify(alumnus)})'>👁️</button>
+                    <button class="btn-icon" title="Edit" onclick='editAlumnusRecord(${JSON.stringify(alumnus)})'>✏</button>
+                    <button class="btn-icon" title="Change Status to Inactive" onclick="cycleStatus('${alumnus.student_id}')">🚫</button>
+                    <button class="btn-icon" title="Soft Delete" onclick="softDeleteRow('${alumnus.student_id}')">🗑</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    ['searchKeyword', 'filterProgram', 'filterBatch', 'filterLocation', 'filterStatus'].forEach(id => {
+        document.getElementById(id).addEventListener('input', applyFilters);
+        document.getElementById(id).addEventListener('change', applyFilters);
+    });
+
+    async function loadAlumniDirectory() {
+        try {
+            const response = await fetch('/api/alumni');
+            if (!response.ok) throw new Error('Failed to fetch alumni');
+            
+            globalAlumniList = await response.json();
+            applyFilters();
+        } catch (err) {
+            console.error('Error loading directory:', err);
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', loadAlumniDirectory);
+
+    function viewAlumnusRecord(alumnus) {
+        populateForm(alumnus);
+        document.getElementById('formTitle').textContent = "View Alumnus Details";
+        setFormEditable(false);
+        switchView('formView');
+    }
+
+    function editAlumnusRecord(alumnus) {
+        populateForm(alumnus);
+        document.getElementById('formTitle').textContent = "Edit Alumnus Record";
+        document.querySelector('.submit-btn').textContent = "Update Alumnus";
+        setFormEditable(true);
+        document.getElementById('student_id').disabled = true;
+        switchView('formView');
+    }
+
+    function populateForm(alumnus) {
+        document.getElementById('student_id').value = alumnus.student_id || '';
+        document.getElementById('first_name').value = alumnus.first_name || '';
+        document.getElementById('middle_name').value = alumnus.middle_name || '';
+        document.getElementById('last_name').value = alumnus.last_name || '';
+        document.getElementById('gender').value = alumnus.gender || '';
+        document.getElementById('date_of_birth').value = alumnus.date_of_birth ? alumnus.date_of_birth.split('T')[0] : '';
+        document.getElementById('email').value = alumnus.email || '';
+        document.getElementById('contact_number').value = alumnus.contact_number || '';
+        document.getElementById('address').value = alumnus.address || '';
+        document.getElementById('program_id').value = alumnus.program_id || '';
+        document.getElementById('batch_year').value = alumnus.batch_year || '';
+    }
+
+    async function cycleStatus(studentId) {
+        const alumnusObj = globalAlumniList.find(a => a.student_id === studentId);
+        if (!alumnusObj) return;
+
+        // Cycle through statuses: Active -> Inactive -> Deceased -> Unverified -> Active
+        const statuses = ['Active', 'Inactive', 'Deceased', 'Unverified'];
+        const current = alumnusObj.current_status || 'Active';
+        const nextIndex = (statuses.indexOf(current) + 1) % statuses.length;
+        const newStatus = statuses[nextIndex];
+            
+        try {
+            await fetch(`/api/alumni/${studentId}/status`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+
+            alumnusObj.current_status = newStatus;
+            applyFilters();
+        } catch (err) {
+            console.error('Status update error:', err);
+        }
+    }
+
+    let selectedStudentIdForDelete = null;
+
+    function softDeleteRow(studentId) {
+        selectedStudentIdForDelete = studentId;
+        document.getElementById('deleteConfirmModal').style.display = 'flex';
+    }
+
+    document.getElementById('confirmCancelBtn').addEventListener('click', () => {
+        document.getElementById('deleteConfirmModal').style.display = 'none';
+        selectedStudentIdForDelete = null;
+    });
+
+    document.getElementById('confirmYesBtn').addEventListener('click', async () => {
+        if (!selectedStudentIdForDelete) return;
+
+        try {
+            const response = await fetch(`/api/alumni/${selectedStudentIdForDelete}/soft-delete`, {
+                method: 'PATCH'
+            });
+
+            if (response.ok) {
+                loadAlumniDirectory();
+            }
+        } catch (err) {
+            console.error('Soft delete error:', err);
+        } finally {
+            document.getElementById('deleteConfirmModal').style.display = 'none';
+            selectedStudentIdForDelete = null;
+        }
+    });
+
+    document.getElementById('alumniForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (document.getElementById('formTitle').textContent.includes("View")) {
+            return;
+        }
+
+        const isEditing = document.getElementById('formTitle').textContent.includes("Edit");
+        const studentId = document.getElementById('student_id').value;
+
+        const formData = {
+            student_id: studentId,
+            first_name: document.getElementById('first_name').value,
+            middle_name: document.getElementById('middle_name').value,
+            last_name: document.getElementById('last_name').value,
+            gender: document.getElementById('gender').value,
+            date_of_birth: document.getElementById('date_of_birth').value,
+            email: document.getElementById('email').value,
+            contact_number: document.getElementById('contact_number').value,
+            address: document.getElementById('address').value,
+            program_id: document.getElementById('program_id').value,
+            batch_year: document.getElementById('batch_year').value
+        };
+
+        try {
+            const url = isEditing ? `/api/alumni/${studentId}` : '/api/alumni';
+            const method = isEditing ? 'PUT' : 'POST';
+
+            const response = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            
+            if (response.ok) {
+                document.getElementById('alumniForm').reset();
+                setFormEditable(true);
+                loadAlumniDirectory();
+                switchView('listView');
+            }
+        } catch (err) {
+            console.error('Submission error:', err);
+        }
+    });
+   </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Alumni Management System</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif, sans-serif;
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            border: 2px solid #2B35AF;
+        }
+        h2 {
+            text-align: center;
+            color: #2B35AF;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        .form-group input:focus {
+            border-color: #2B35AF;
+            outline: none;
+            box-shadow: 0 0 5px rgba(43, 53, 175, 0.3);
+        }
+        .btn-login {
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            width: 100%;
+            padding: 10px;
+            background-color: #2B35AF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            letter-spacing: 2px;
+        }
+        .btn-login:hover {
+            opacity: 0.85;
+        }
+        .error-msg {
+            color: #d9534f;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <h2>System Login</h2>
+    <form id="loginForm">
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="username" required>
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="password" required>
+        </div>
+        <button type="submit" class="btn-login">Login</button>
+        <div id="errorMsg" class="error-msg"></div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                sessionStorage.setItem('username', result.username);
+                sessionStorage.setItem('role', result.role_id);
+
+                const roleId = Number(result.role_id);
+
+                switch (roleId) {
+                    case 1:
+                        window.location.href = '/alumnidirectory.html';
+                        break;
+                    case 2:
+                        window.location.href = '/alumnidirectory.html';
+                        break;
+                    case 3:
+                        window.location.href = '/employmentdirectory.html';
+                        break;
+                    case 4:
+                        window.location.href = '/eventsdirectory.html';
+                        break;
+                    case 5:
+                        window.location.href = '/fundraisingdirectory.html';
+                        break;
+                    case 6:
+                        window.location.href = '/communicationdirectory.html';
+                        break;
+                    case 7:
+                        window.location.href = '/reportdirectory.html';
+                        break;
+                    default:
+                        alert('Access restricted.');
+                }
+            } else {
+                alert('Error: ' + result.error);
+            }
+        } catch (err) {
+            console.error('Login error:', err);
+            alert('An error occurred during login.');
+        }
+    });
+</script>
+
+</body>
+</html>
