@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2');
 const path = require('path');
@@ -19,16 +20,7 @@ app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
-const db = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'sql', 
-    database: 'alumni_db',
-    port: 3307, 
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-});
+const db = mysql.createPool(process.env.DATABASE_URL);
 
 db.getConnection((err, connection) => {
     if (err) {
