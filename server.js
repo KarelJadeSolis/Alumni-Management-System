@@ -54,7 +54,6 @@ app.post('/api/login', (req, res) => {
     });
 });
 
-// Updated GET route to exclude soft-deleted records
 app.get('/api/alumni', (req, res) => {
     const query = `
         SELECT a.*, p.program_name 
@@ -148,8 +147,8 @@ app.patch('/api/alumni/:id/status', (req, res) => {
 app.patch('/api/alumni/:id/soft-delete', (req, res) => {
     const studentId = req.params.id;
     
-    const query = `UPDATE alumni SET is_deleted = 1 WHERE student_id = ?`;
-    db.query(query, [studentId], (err) => {
+    const query = `UPDATE alumni SET is_deleted = 1 WHERE student_id = ?`; 
+    db.query(query, [studentId], (err) => { //
         if (err) {
             console.error('❌ SOFT DELETE ERROR:', err.message);
             return res.status(500).json({ error: 'Failed to soft delete record.' });
