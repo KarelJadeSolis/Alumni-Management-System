@@ -361,6 +361,32 @@
         </form>
     </div>
 </div>
+
+<!-- View Courses Modal Container -->
+<div id="viewCoursesModal" class="confirm-modal" style="display: none;">
+    <div class="confirm-content" style="width: 650px; text-align: left; max-height: 80vh; overflow-y: auto;">
+        <h3 style="margin-top: 0; color: #2B35AF; text-align: center;">Registered Academic Courses</h3>
+        
+        <div class="table-responsive" style="margin-top: 15px;">
+            <table class="alumni-table">
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Course Program Name</th>
+                        <th>Department</th>
+                    </tr>
+                </thead>
+                <tbody id="coursesTableBody">
+                    <!-- Dynamically loaded courses will appear here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 20px; text-align: right;">
+            <button type="button" class="btn-secondary" onclick="closeViewCoursesModal()">Close</button>
+        </div>
+    </div>
+</div>
                     <button type="button" id="showAddFormBtn" class="btn-primary">Register New Alumnus</button>
                     <button type="button" id="logoutBtn" class="btn-secondary">Log Out</button>
                 </div>
@@ -826,6 +852,37 @@ document.getElementById('addCourseForm').addEventListener('submit', async (e) =>
         alert('Server error occurred while saving the course.');
     }
 });
+
+async function loadCoursesTable() {
+    const tbody = document.getElementById('coursesTableBody');
+    tbody.innerHTML = `<tr><td colspan="3" style="text-align: center;">Loading courses...</td></tr>`;
+
+    try {
+        const response = await fetch('/api/courses');
+        if (!response.ok) throw new Error('Failed to fetch courses');
+
+        const courses = await response.json();
+        tbody.innerHTML = '';
+
+        if (courses.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" style="text-align: center;">No courses registered yet.</td></tr>`;
+            return;
+        }
+
+        courses.forEach(course => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><strong>${course.course_code || ''}</strong></td>
+                <td>${course.course_name || ''}</td>
+                <td>${course.department || ''}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    } catch (err) {
+        console.error('Error loading courses:', err);
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: red;">Error loading courses from server.</td></tr>`;
+    }
+}
     </script>
 </body>
 </html>
