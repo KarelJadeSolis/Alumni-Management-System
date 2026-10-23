@@ -43,6 +43,7 @@
         .header-actions {
             display: flex;
             gap: 10px;
+            align-items: center;
         }
 
         h2 {
@@ -271,44 +272,45 @@
             cursor: pointer;
         }
 
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
 
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: #ffffff;
-    min-width: 240px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.15);
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    z-index: 1000;
-    margin-top: 4px;
-    overflow: hidden;
-}
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: #ffffff;
+            min-width: 240px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.15);
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            z-index: 1000;
+            margin-top: 4px;
+            overflow: hidden;
+        }
 
-.dropdown-menu a {
-    color: #333;
-    padding: 10px 14px;
-    text-decoration: none;
-    display: block;
-    font-size: 13px;
-    font-family: Arial, sans-serif;
-    transition: background-color 0.2s;
-}
+        .dropdown-menu a {
+            color: #333;
+            padding: 10px 14px;
+            text-decoration: none;
+            display: block;
+            font-size: 13px;
+            font-family: Arial, sans-serif;
+            transition: background-color 0.2s;
+            text-align: left;
+        }
 
-.dropdown-menu a:hover {
-    background-color: #f4f6f9;
-    color: #2B35AF;
-}
+        .dropdown-menu a:hover {
+            background-color: #f4f6f9;
+            color: #2B35AF;
+        }
 
-.dropdown-menu.show {
-    display: block;
-}
+        .dropdown-menu.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -319,16 +321,21 @@
             <div class="header-flex">
                 <h2>Alumni Directory</h2>
                 <div class="header-actions">
+                    <!-- Course Management Dropdown Button placed beside Register and Logout -->
+                    <div class="dropdown">
+                        <button type="button" id="courseDropdownBtn" class="btn-primary">Course Management ▾</button>
+                        <div id="courseMenu" class="dropdown-menu">
+                            <a href="#" onclick="openAddCourse()">Add Course</a>
+                            <a href="#" onclick="openViewCourses()">View Courses</a>
+                            <a href="#" onclick="openEditCourses()">Edit Courses</a>
+                            <a href="#" onclick="openDeleteCourses()">Delete Courses</a>
+                        </div>
+                    </div>
+
                     <button type="button" id="showAddFormBtn" class="btn-primary">Register New Alumnus</button>
                     <button type="button" id="logoutBtn" class="btn-secondary">Log Out</button>
-                    
                 </div>
             </div>
-
-
-
-
-
 
             <div class="filters-grid">
                 <div class="filter-group">
@@ -462,21 +469,10 @@
                 </div>
 
                 <button type="submit" class="submit-btn">Register Alumnus</button>
-
-                <div style="margin-bottom: 15px;">
-    
-
             </form>
-
-            <div class="dropdown">
-                <button type="button" id="courseDropdownBtn" class="btn-primary">Course Management ▾</button>
-                <div id="courseMenu" class="dropdown-menu">
-                <a href="#" onclick="openAddCourse()">Add Course</a>
-                <a href="#" onclick="openViewCourses()">View Courses</a>
-                <a href="#" onclick="openEditCourses()">Edit Courses</a>
-                <a href="#" onclick="openDeleteCourses()">Delete Courses</a>
-            </div>
         </div>
+
+    </div>
 
     <div id="deleteConfirmModal" class="confirm-modal" style="display: none;">
         <div class="confirm-content">
@@ -488,7 +484,7 @@
         </div>
     </div>
 
-   <script>
+    <script>
     window.addEventListener('DOMContentLoaded', () => {
         const loggedInUser = sessionStorage.getItem('username');
         const userRole = sessionStorage.getItem('role');
@@ -647,7 +643,6 @@
         const alumnusObj = globalAlumniList.find(a => a.student_id === studentId);
         if (!alumnusObj) return;
 
-        // Cycle through statuses: Active -> Inactive -> Deceased -> Unverified -> Active
         const statuses = ['Active', 'Inactive', 'Deceased', 'Unverified'];
         const current = alumnusObj.current_status || 'Active';
         const nextIndex = (statuses.indexOf(current) + 1) % statuses.length;
@@ -673,45 +668,6 @@
         selectedStudentIdForDelete = studentId;
         document.getElementById('deleteConfirmModal').style.display = 'flex';
     }
-
-    /*document.addEventListener('DOMContentLoaded', async () => {
-     try {
-        const response = await fetch('/api/courses');
-        const courses = await response.json();
-        
-        const courseSelect = document.getElementById('alumniSelect');
-        
-        courses.forEach(course => {
-            const option = document.createElement('option');
-            option.value = course.id; 
-            option.textContent = `${course.course_code} - ${course.course_name}`;
-            courseSelect.appendChild(option);
-        });
-     } catch (err) {
-        console.error('❌ Error loading courses:', err);
-     }
-    });*/
-
-    /* async function archiveCourse(courseId) {
-    if (!confirm('Are you sure you want to archive this course record?')) return;
-
-     try {
-        const response = await fetch(`/api/courses/${courseId}/soft-delete`, {
-            method: 'PATCH'
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-            alert(data.message);
-            location.reload();
-        } else {
-            alert(data.error || 'Failed to update status.');
-        }
-     } catch (err) {
-        console.error('❌ Error connecting to server:', err);
-     }
-    }*/
 
     document.getElementById('confirmCancelBtn').addEventListener('click', () => {
         document.getElementById('deleteConfirmModal').style.display = 'none';
@@ -780,52 +736,45 @@
         } catch (err) {
             console.error('Submission error:', err);
         }
-
-
-
-        document.getElementById('showAddCourseBtn').addEventListener('click', () => {
-        });
-
-
     });
 
     // Course Dropdown Toggle Logic
-const courseDropdownBtn = document.getElementById('courseDropdownBtn');
-const courseMenu = document.getElementById('courseMenu');
+    const courseDropdownBtn = document.getElementById('courseDropdownBtn');
+    const courseMenu = document.getElementById('courseMenu');
 
-if (courseDropdownBtn && courseMenu) {
-    courseDropdownBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        courseMenu.classList.toggle('show');
-    });
+    if (courseDropdownBtn && courseMenu) {
+        courseDropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            courseMenu.classList.toggle('show');
+        });
 
-    window.addEventListener('click', () => {
-        if (courseMenu.classList.contains('show')) {
-            courseMenu.classList.remove('show');
-        }
-    });
-}
+        window.addEventListener('click', () => {
+            if (courseMenu.classList.contains('show')) {
+                courseMenu.classList.remove('show');
+            }
+        });
+    }
 
-// Course Management Handlers (Laboratory 8 Actions)
-function openAddCourse() {
-    alert("Redirecting to Add Course module...");
-    courseMenu.classList.remove('show');
-}
+    // Course Management Handlers (Laboratory 8 Actions)
+    function openAddCourse() {
+        alert("Redirecting to Add Course module...");
+        courseMenu.classList.remove('show');
+    }
 
-function openViewCourses() {
-    alert("Displaying Courses list...");
-    courseMenu.classList.remove('show');
-}
+    function openViewCourses() {
+        alert("Displaying Courses list...");
+        courseMenu.classList.remove('show');
+    }
 
-function openEditCourses() {
-    alert("Opening Edit Course interface...");
-    courseMenu.classList.remove('show');
-}
+    function openEditCourses() {
+        alert("Opening Edit Course interface...");
+        courseMenu.classList.remove('show');
+    }
 
-function openDeleteCourses() {
-    alert("Opening Delete/Deactivate Course interface...");
-    courseMenu.classList.remove('show');
-}
-   </script>
+    function openDeleteCourses() {
+        alert("Opening Delete/Deactivate Course interface...");
+        courseMenu.classList.remove('show');
+    }
+    </script>
 </body>
 </html>
