@@ -321,7 +321,7 @@
             <div class="header-flex">
                 <h2>Alumni Directory</h2>
                 <div class="header-actions">
-                    <!-- Course Management Dropdown Button placed beside Register and Logout -->
+                    
                     <div class="dropdown">
                         <button type="button" id="courseDropdownBtn" class="btn-primary">Course Management ▾</button>
                         <div id="courseMenu" class="dropdown-menu">
@@ -329,6 +329,31 @@
                             <a href="#" onclick="openViewCourses()">View Courses</a>
                             <a href="#" onclick="openEditCourses()">Edit Courses</a>
                             <a href="#" onclick="openDeleteCourses()">Delete Courses</a>
+
+                            <!-- Add Course Modal Container -->
+<div id="addCourseModal" class="confirm-modal" style="display: none;">
+    <div class="confirm-content" style="width: 400px; text-align: left;">
+        <h3 style="margin-top: 0; color: #2B35AF; text-align: center;">Add New Academic Course</h3>
+        <form id="addCourseForm">
+            <div style="margin-bottom: 12px;">
+                <label for="courseCodeInput">Course Code / Short Name:</label>
+                <input type="text" id="courseCodeInput" placeholder="e.g. BSIT" required>
+            </div>
+            <div style="margin-bottom: 12px;">
+                <label for="courseNameInput">Full Course Program Name:</label>
+                <input type="text" id="courseNameInput" placeholder="e.g. Bachelor of Science in Information Technology" required>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label for="courseDeptInput">Department / Faculty Head Name:</label>
+                <input type="text" id="courseDeptInput" placeholder="e.g. Dept. of Computer Studies" required>
+            </div>
+            <div class="confirm-actions" style="margin-top: 15px;">
+                <button type="submit" class="btn-primary" style="flex: 1; margin-right: 5px;">Save Course</button>
+                <button type="button" class="btn-cancel" onclick="closeAddCourseModal()" style="flex: 1; margin-left: 5px;">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
                         </div>
                     </div>
 
@@ -738,7 +763,6 @@
         }
     });
 
-    // Course Dropdown Toggle Logic
     const courseDropdownBtn = document.getElementById('courseDropdownBtn');
     const courseMenu = document.getElementById('courseMenu');
 
@@ -755,26 +779,49 @@
         });
     }
 
-    // Course Management Handlers (Laboratory 8 Actions)
-    function openAddCourse() {
-        alert("Redirecting to Add Course module...");
-        courseMenu.classList.remove('show');
-    }
+   // Open the Add Course Modal Container when clicking "Add Course"
+function openAddCourse() {
+    if (courseMenu) courseMenu.classList.remove('show');
+    document.getElementById('addCourseForm').reset();
+    document.getElementById('addCourseModal').style.display = 'flex';
+}
 
-    function openViewCourses() {
-        alert("Displaying Courses list...");
-        courseMenu.classList.remove('show');
-    }
+// Close the Modal
+function closeAddCourseModal() {
+    document.getElementById('addCourseModal').style.display = 'none';
+}
 
-    function openEditCourses() {
-        alert("Opening Edit Course interface...");
-        courseMenu.classList.remove('show');
-    }
+// Handle Add Course Form Submission (API Connection to Lab 8 Endpoint)
+document.getElementById('addCourseForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-    function openDeleteCourses() {
-        alert("Opening Delete/Deactivate Course interface...");
-        courseMenu.classList.remove('show');
+    const courseData = {
+        course_code: document.getElementById('courseCodeInput').value.trim(),
+        course_name: document.getElementById('courseNameInput').value.trim(),
+        department: document.getElementById('courseDeptInput').value.trim()
+    };
+
+    try {
+        const response = await fetch('/api/courses', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(courseData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert(result.message || 'Course added successfully!');
+            closeAddCourseModal();
+            // Optional: Reload dynamic options if dynamically populated
+        } else {
+            alert(result.error || 'Failed to add course.');
+        }
+    } catch (err) {
+        console.error('Error adding course:', err);
+        alert('Server error occurred while saving the course.');
     }
+});
     </script>
 </body>
 </html>
