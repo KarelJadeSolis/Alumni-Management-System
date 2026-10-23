@@ -282,6 +282,46 @@
          .btn-ternary:hover {
             background-color: #2B35AF;
         }
+
+        /* Course Dropdown Styling */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #ffffff;
+    min-width: 240px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.15);
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    z-index: 1000;
+    margin-top: 4px;
+    overflow: hidden;
+}
+
+.dropdown-menu a {
+    color: #333;
+    padding: 10px 14px;
+    text-decoration: none;
+    display: block;
+    font-size: 13px;
+    font-family: Arial, sans-serif;
+    transition: background-color 0.2s;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f4f6f9;
+    color: #2B35AF;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
     </style>
 </head>
 <body>
@@ -450,6 +490,16 @@
         </div>
     </div>
 
+    <div class="dropdown">
+    <button type="button" id="courseDropdownBtn" class="btn-primary">Course ▾</button>
+    <div id="courseMenu" class="dropdown-menu">
+        <a href="#" onclick="filterByCourse('BS Information Technology')">BS Information Technology</a>
+        <a href="#" onclick="filterByCourse('BS Computer Science')">BS Computer Science</a>
+        <a href="#" onclick="filterByCourse('BS Library and Information Science')">BS Library and Information Science</a>
+        <a href="#" onclick="filterByCourse('BS Mathematics')">BS Mathematics</a>
+        <a href="#" onclick="filterByCourse('')">Show All Courses</a>
+    </div>
+  </div>
 
    <script>
     window.addEventListener('DOMContentLoaded', () => {
@@ -751,6 +801,29 @@
 
 
     });
+
+    const courseDropdownBtn = document.getElementById('courseDropdownBtn');
+const courseMenu = document.getElementById('courseMenu');
+
+courseDropdownBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    courseMenu.classList.toggle('show');
+});
+
+window.addEventListener('click', () => {
+    if (courseMenu.classList.contains('show')) {
+        courseMenu.classList.remove('show');
+    }
+});
+
+function filterByCourse(courseName) {
+    const programSelect = document.getElementById('filterProgram');
+    if (programSelect) {
+        programSelect.value = courseName;
+        applyFilters();
+    }
+    courseMenu.classList.remove('show');
+}
    </script>
 </body>
 </html>
