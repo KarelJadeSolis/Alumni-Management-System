@@ -475,6 +475,19 @@
                 </div>
 
                 <button type="submit" class="submit-btn">Register Alumnus</button>
+
+                <div style="margin-bottom: 15px;">
+    <div class="dropdown">
+        <button type="button" id="courseDropdownBtn" class="btn-primary">Course Management ▾</button>
+        <div id="courseMenu" class="dropdown-menu">
+            <a href="#" onclick="openAddCourse()">Add Course</a>
+            <a href="#" onclick="openViewCourses()">View Courses</a>
+            <a href="#" onclick="openEditCourses()">Edit Courses</a>
+            <a href="#" onclick="openDeleteCourses()">Delete Courses</a>
+        </div>
+    </div>
+   </div>
+
             </form>
         </div>
 
@@ -489,18 +502,6 @@
             </div>
         </div>
     </div>
-
-    <div style="margin-bottom: 15px;">
-    <div class="dropdown">
-        <button type="button" id="courseDropdownBtn" class="btn-primary">Course Management ▾</button>
-        <div id="courseMenu" class="dropdown-menu">
-            <a href="#" onclick="openAddCourse()">Add Course</a>
-            <a href="#" onclick="openViewCourses()">View Courses</a>
-            <a href="#" onclick="openEditCourses()">Edit Courses</a>
-            <a href="#" onclick="openDeleteCourses()">Delete Courses</a>
-        </div>
-    </div>
-   </div>
 
    <script>
     window.addEventListener('DOMContentLoaded', () => {
