@@ -490,16 +490,17 @@
         </div>
     </div>
 
+    <div style="margin-bottom: 15px;">
     <div class="dropdown">
-    <button type="button" id="courseDropdownBtn" class="btn-primary">Course ▾</button>
-    <div id="courseMenu" class="dropdown-menu">
-        <a href="#" onclick="filterByCourse('BS Information Technology')">BS Information Technology</a>
-        <a href="#" onclick="filterByCourse('BS Computer Science')">BS Computer Science</a>
-        <a href="#" onclick="filterByCourse('BS Library and Information Science')">BS Library and Information Science</a>
-        <a href="#" onclick="filterByCourse('BS Mathematics')">BS Mathematics</a>
-        <a href="#" onclick="filterByCourse('')">Show All Courses</a>
+        <button type="button" id="courseDropdownBtn" class="btn-primary">Course Management ▾</button>
+        <div id="courseMenu" class="dropdown-menu">
+            <a href="#" onclick="openAddCourse()">Add Course</a>
+            <a href="#" onclick="openViewCourses()">View Courses</a>
+            <a href="#" onclick="openEditCourses()">Edit Courses</a>
+            <a href="#" onclick="openDeleteCourses()">Delete Courses</a>
+        </div>
     </div>
-  </div>
+   </div>
 
    <script>
     window.addEventListener('DOMContentLoaded', () => {
@@ -802,26 +803,41 @@
 
     });
 
-    const courseDropdownBtn = document.getElementById('courseDropdownBtn');
+    // Course Dropdown Toggle Logic
+const courseDropdownBtn = document.getElementById('courseDropdownBtn');
 const courseMenu = document.getElementById('courseMenu');
 
-courseDropdownBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    courseMenu.classList.toggle('show');
-});
+if (courseDropdownBtn && courseMenu) {
+    courseDropdownBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        courseMenu.classList.toggle('show');
+    });
 
-window.addEventListener('click', () => {
-    if (courseMenu.classList.contains('show')) {
-        courseMenu.classList.remove('show');
-    }
-});
+    window.addEventListener('click', () => {
+        if (courseMenu.classList.contains('show')) {
+            courseMenu.classList.remove('show');
+        }
+    });
+}
 
-function filterByCourse(courseName) {
-    const programSelect = document.getElementById('filterProgram');
-    if (programSelect) {
-        programSelect.value = courseName;
-        applyFilters();
-    }
+// Course Management Handlers (Laboratory 8 Actions)
+function openAddCourse() {
+    alert("Redirecting to Add Course module...");
+    courseMenu.classList.remove('show');
+}
+
+function openViewCourses() {
+    alert("Displaying Courses list...");
+    courseMenu.classList.remove('show');
+}
+
+function openEditCourses() {
+    alert("Opening Edit Course interface...");
+    courseMenu.classList.remove('show');
+}
+
+function openDeleteCourses() {
+    alert("Opening Delete/Deactivate Course interface...");
     courseMenu.classList.remove('show');
 }
    </script>
