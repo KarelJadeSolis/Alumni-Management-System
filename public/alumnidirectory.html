@@ -451,25 +451,6 @@
     </div>
 
 
-
-     <div id="formView" class="view-section">
-            <div class="header-flex">
-                <h2 id="formTitle">Course Management</h2>
-                    <button type="button" id="showAddCourseBtn" class="btn-add">Register New Alumnus</button>
-                    <button type="button" id="viewCourseBtn" class="btn-view">Log Out</button>
-                    <button type="button" id="updateCourseBtn" class="btn-update">Course</button>
-                    <button type="button" id="deleteCourseBtn" class="btn-delete">Course</button>
-                    <button type="button" id="backToListBtn" class="btn-secondary">Back to List</button>
-            </div>
-
-            <form id="courseForm">
-                
-                <button type="submit" class="submit-btn">Register Course</button>
-            </form>
-        </div>   
-    </div>
-    
-
    <script>
     window.addEventListener('DOMContentLoaded', () => {
         const loggedInUser = sessionStorage.getItem('username');
@@ -763,13 +744,12 @@
             console.error('Submission error:', err);
         }
 
+
+
         document.getElementById('showAddCourseBtn').addEventListener('click', () => {
-        document.getElementById('courseForm').reset();
-        document.getElementById('formTitle').textContent = "Course Management";
-        document.querySelector('.submit-btn').textContent = "Register Course";
-        setFormEditable(true);
-        switchView('formView');
         });
+
+
     });
    </script>
 </body>
