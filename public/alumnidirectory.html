@@ -271,19 +271,6 @@
             cursor: pointer;
         }
 
-
-        .btn-ternary {
-            background-color: navy;
-            color: white;
-            padding: 10px 16px;
-            font-size: 14px;
-        }
-
-         .btn-ternary:hover {
-            background-color: #2B35AF;
-        }
-
-        /* Course Dropdown Styling */
 .dropdown {
     position: relative;
     display: inline-block;
@@ -482,18 +469,14 @@
             </form>
 
             <div class="dropdown">
-        <button type="button" id="courseDropdownBtn" class="btn-primary">Course Management ▾</button>
-        <div id="courseMenu" class="dropdown-menu">
-            <a href="#" onclick="openAddCourse()">Add Course</a>
-            <a href="#" onclick="openViewCourses()">View Courses</a>
-            <a href="#" onclick="openEditCourses()">Edit Courses</a>
-            <a href="#" onclick="openDeleteCourses()">Delete Courses</a>
+                <button type="button" id="courseDropdownBtn" class="btn-primary">Course Management ▾</button>
+                <div id="courseMenu" class="dropdown-menu">
+                <a href="#" onclick="openAddCourse()">Add Course</a>
+                <a href="#" onclick="openViewCourses()">View Courses</a>
+                <a href="#" onclick="openEditCourses()">Edit Courses</a>
+                <a href="#" onclick="openDeleteCourses()">Delete Courses</a>
+            </div>
         </div>
-    </div>
-   </div>
-        </div>
-
-    </div>
 
     <div id="deleteConfirmModal" class="confirm-modal" style="display: none;">
         <div class="confirm-content">
