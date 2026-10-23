@@ -451,6 +451,19 @@
     </div>
 
 
+
+     <div id="formView" class="view-section">
+            <div class="header-flex">
+                <h2 id="formTitle">Alumni Registration</h2>
+                <button type="button" id="backToListBtn" class="btn-secondary">Back to List</button>
+            </div>
+
+            <form id="courseForm">
+                
+                <button type="submit" class="submit-btn">Register Course</button>
+            </form>
+        </div>   
+    </div>
     
 
    <script>
@@ -747,7 +760,7 @@
         }
 
         document.getElementById('addCourseBtn').addEventListener('click', () => {
-        document.getElementById('alumniForm').reset();
+        document.getElementById('courseForm').reset();
         document.getElementById('formTitle').textContent = "Course Management";
         document.querySelector('.submit-btn').textContent = "Register Course";
         setFormEditable(true);
